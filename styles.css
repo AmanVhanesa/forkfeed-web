@@ -1,0 +1,95 @@
+/* ForkFeed website — brand tokens mirror the app's theme (constants/theme.ts). */
+:root {
+  --cream: #f6ecdb;
+  --cream-deep: #efe2cc;
+  --card: #fffdf8;
+  --terra: #ce7355;
+  --terra-deep: #b85c40;
+  --sage: #7e8c66;
+  --ink: #3b342b;
+  --ink-soft: #8c8170;
+  --line: rgba(120, 92, 58, 0.13);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--terra-deep); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+
+/* ── Top bar ───────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  background: rgba(246, 236, 219, 0.92);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--line);
+  z-index: 10;
+}
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 64px;
+}
+.topbar img { width: 34px; height: 34px; border-radius: 9px; }
+.topbar .name {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ink);
+}
+.topbar nav { margin-left: auto; display: flex; gap: 18px; font-weight: 700; font-size: 15px; }
+.topbar nav a { color: var(--ink-soft); }
+
+/* ── Hero (home) ───────────────────────────────────────── */
+.hero { text-align: center; padding: 70px 0 40px; }
+.hero img { width: 108px; height: 108px; border-radius: 28px; box-shadow: 0 10px 30px rgba(120, 92, 58, 0.18); }
+.hero h1 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 44px;
+  margin: 22px 0 6px;
+  color: var(--ink);
+}
+.eyebrow { color: var(--sage); font-weight: 800; letter-spacing: 2px; font-size: 13px; }
+.hero p.tag { color: var(--ink-soft); font-size: 19px; max-width: 460px; margin: 14px auto 0; }
+
+/* ── Feature cards ─────────────────────────────────────── */
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 48px 0; }
+.feature {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+}
+.feature .ico { font-size: 26px; }
+.feature h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 19px; margin: 10px 0 6px; color: var(--ink); }
+.feature p { color: var(--ink-soft); font-size: 15.5px; margin: 0; }
+
+/* ── Legal documents ───────────────────────────────────── */
+.doc { padding: 48px 0 30px; }
+.doc h1 { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 36px; color: var(--ink); margin: 0 0 4px; }
+.doc .effective { color: var(--ink-soft); font-size: 15px; margin: 0 0 8px; }
+.doc h2 { color: var(--terra-deep); font-size: 19px; font-weight: 800; margin: 34px 0 10px; }
+.doc p { color: var(--ink-soft); margin: 0 0 12px; }
+.doc ul { color: var(--ink-soft); margin: 0 0 12px; padding-left: 22px; }
+.doc li { margin-bottom: 7px; }
+
+/* ── Footer ────────────────────────────────────────────── */
+footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 28px 0 48px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; color: var(--ink-soft); font-size: 14.5px; }
+footer nav { margin-left: auto; display: flex; gap: 18px; font-weight: 700; }
