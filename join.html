@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join a Kitchen on ForkFeed</title>
+  <meta name="description" content="Open your ForkFeed invite to join a shared kitchen — cook, plan and shop together." />
+  <link rel="icon" href="logo.png" />
+  <!--
+    Invite bounce page. Messaging apps (WhatsApp/iMessage) only make https links
+    tappable, not custom schemes — so kitchen invites point here, and this page
+    hands off to the app via the forkfeed:// scheme. Universal Links (no web hop)
+    would need the Associated Domains entitlement, which a free Apple account
+    can't sign, so this redirect is the deliberate approach.
+  -->
+  <style>
+    :root {
+      --cream: #F6ECDB; --card: #FFFDF8; --terra: #CE7355; --terra-deep: #B85C40;
+      --ink: #3B342B; --ink-soft: #8C8170; --line: rgba(120,92,58,0.13);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--cream); color: var(--ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      background: var(--card); border-radius: 28px; max-width: 420px; width: 100%;
+      padding: 40px 28px; text-align: center;
+      box-shadow: 0 18px 50px rgba(120,92,58,0.18);
+    }
+    .pan { font-size: 56px; line-height: 1; margin-bottom: 18px; }
+    h1 {
+      font-family: 'Quicksand', sans-serif; font-weight: 700;
+      font-size: 26px; color: var(--ink); margin-bottom: 10px;
+    }
+    p { font-size: 16px; line-height: 1.5; color: var(--ink-soft); margin-bottom: 8px; }
+    .btn {
+      display: inline-block; margin: 22px 0 8px; padding: 16px 28px;
+      background: var(--terra); color: #fff; text-decoration: none;
+      font-weight: 800; font-size: 17px; border-radius: 18px;
+      box-shadow: 0 8px 22px rgba(206,115,85,0.4);
+    }
+    .btn:active { background: var(--terra-deep); }
+    .code-label { font-size: 13px; font-weight: 800; letter-spacing: 1px; color: var(--ink-soft); margin-top: 26px; text-transform: uppercase; }
+    .code {
+      display: inline-block; margin-top: 8px; padding: 12px 20px;
+      background: var(--cream); border: 1.5px solid var(--line); border-radius: 14px;
+      font-family: 'Quicksand', monospace; font-weight: 700; font-size: 24px;
+      letter-spacing: 3px; color: var(--ink);
+    }
+    .hint { font-size: 14px; margin-top: 22px; color: var(--ink-soft); }
+    .err { color: var(--terra-deep); font-weight: 700; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="card">
+    <div class="pan">🍳</div>
+    <h1 id="title">You're invited to a Kitchen</h1>
+    <p>Join to share cookbooks, plan meals and build a grocery list together.</p>
+
+    <a class="btn" id="openBtn" href="#">Open in ForkFeed</a>
+
+    <div id="codeBlock">
+      <div class="code-label">Or join with this code</div>
+      <div class="code" id="codeText">—</div>
+    </div>
+
+    <p class="hint">
+      Don't have ForkFeed open? Launch the app, go to
+      <strong>Kitchens → Join with code</strong>, and enter the code above.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var code = (params.get('invite') || '').trim().toUpperCase();
+      var openBtn = document.getElementById('openBtn');
+      var codeText = document.getElementById('codeText');
+      var title = document.getElementById('title');
+
+      if (!code) {
+        title.textContent = 'Invite link is incomplete';
+        title.className = 'err';
+        document.getElementById('codeBlock').style.display = 'none';
+        openBtn.style.display = 'none';
+        return;
+      }
+
+      // Deep link into the app's join screen. expo-router routes forkfeed://join
+      // → app/join.tsx, which reads ?invite and confirms joining.
+      var appUrl = 'forkfeed://join?invite=' + encodeURIComponent(code);
+      codeText.textContent = code;
+      openBtn.setAttribute('href', appUrl);
+
+      // Auto-attempt the hand-off shortly after load (the button is the fallback
+      // if the OS blocks the automatic scheme open).
+      setTimeout(function () { window.location.href = appUrl; }, 600);
+    })();
+  </script>
+</body>
+</html>
