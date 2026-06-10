@@ -66,20 +66,23 @@
   <script>
     (function () {
       var params = new URLSearchParams(location.search);
-      var r = params.get('r');
+      var s = params.get('s'); // short backend code (preferred, tidy)
+      var r = params.get('r'); // long self-contained payload (fallback / legacy)
       var openBtn = document.getElementById('openBtn');
       var title = document.getElementById('title');
 
-      if (!r) {
+      // Hand off to the app's import flow. expo-router routes forkfeed://import →
+      // /import; ?s= resolves the payload from the backend, ?r= is base64url
+      // (URL-safe) and passes through unescaped.
+      var appUrl = s ? ('forkfeed://import?s=' + s) : (r ? ('forkfeed://import?r=' + r) : null);
+
+      if (!appUrl) {
         title.textContent = 'This recipe link is incomplete';
         title.className = 'err';
         openBtn.style.display = 'none';
         return;
       }
 
-      // Hand off to the app's import flow. The payload is base64url (URL-safe), so
-      // it passes through unescaped; expo-router routes forkfeed://import → /import.
-      var appUrl = 'forkfeed://import?r=' + r;
       openBtn.setAttribute('href', appUrl);
       setTimeout(function () { window.location.href = appUrl; }, 600);
     })();
