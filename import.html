@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open a recipe in ForkFeed</title>
+  <meta name="description" content="A recipe was shared with you — open it in ForkFeed to save it to your library in one tap." />
+  <link rel="icon" href="logo.png" />
+  <!--
+    Recipe-share bounce page. The recipe is packed into the ?r= payload by the app
+    (lib/shareRecipe.ts). Messaging apps only make https links tappable, so shared
+    recipes point here, and this page hands off to forkfeed://import?r=… The full
+    readable recipe is ALSO in the share message, so non-ForkFeed users miss nothing.
+  -->
+  <style>
+    :root {
+      --cream: #F6ECDB; --card: #FFFDF8; --terra: #CE7355; --terra-deep: #B85C40;
+      --ink: #3B342B; --ink-soft: #8C8170; --line: rgba(120,92,58,0.13);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--cream); color: var(--ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      background: var(--card); border-radius: 28px; max-width: 420px; width: 100%;
+      padding: 40px 28px; text-align: center;
+      box-shadow: 0 18px 50px rgba(120,92,58,0.18);
+    }
+    .fork { font-size: 56px; line-height: 1; margin-bottom: 18px; }
+    h1 {
+      font-family: 'Quicksand', sans-serif; font-weight: 700;
+      font-size: 26px; color: var(--ink); margin-bottom: 10px;
+    }
+    p { font-size: 16px; line-height: 1.5; color: var(--ink-soft); margin-bottom: 8px; }
+    .btn {
+      display: inline-block; margin: 22px 0 8px; padding: 16px 28px;
+      background: var(--terra); color: #fff; text-decoration: none;
+      font-weight: 800; font-size: 17px; border-radius: 18px;
+      box-shadow: 0 8px 22px rgba(206,115,85,0.4);
+    }
+    .btn:active { background: var(--terra-deep); }
+    .hint { font-size: 14px; margin-top: 22px; color: var(--ink-soft); }
+    .err { color: var(--terra-deep); font-weight: 700; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="card">
+    <div class="fork">🍴</div>
+    <h1 id="title">A recipe was shared with you</h1>
+    <p>Open it in ForkFeed to save it to your library in one tap.</p>
+
+    <a class="btn" id="openBtn" href="#">Open in ForkFeed</a>
+
+    <p class="hint">
+      Don't have ForkFeed open? The message you received also includes the full
+      recipe as text — so you can read and cook it anywhere.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var r = params.get('r');
+      var openBtn = document.getElementById('openBtn');
+      var title = document.getElementById('title');
+
+      if (!r) {
+        title.textContent = 'This recipe link is incomplete';
+        title.className = 'err';
+        openBtn.style.display = 'none';
+        return;
+      }
+
+      // Hand off to the app's import flow. The payload is base64url (URL-safe), so
+      // it passes through unescaped; expo-router routes forkfeed://import → /import.
+      var appUrl = 'forkfeed://import?r=' + r;
+      openBtn.setAttribute('href', appUrl);
+      setTimeout(function () { window.location.href = appUrl; }, 600);
+    })();
+  </script>
+</body>
+</html>
